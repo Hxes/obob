@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>OBOB for Free</title>
+    </head>
+    <body>
+        <style>
+            .container{
+                align-items: center;
+                justify-content: center;
+                display: flex;
+            }
+            .box{
+                background-color: #cbcadd;
+                height: 63vh;
+                width: 50vw;
+                border-radius: 25px;
+                margin-top: 10vh;
+                display: flex;
+                text-align: center;
+                justify-content: center;
+            }
+            .question{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .title{
+                font-size: 60px;
+                margin-top: 13vh;
+            }
+            .author{
+                margin-top: .25vh;
+                font-size: 30px;
+            }
+            .text{
+                width: 30vw;
+                height: 20vh;
+                background-color: white;
+                font-size: 20px;
+                margin-top: 3.5vh;
+                border-radius: 25px;
+                text-align: center;
+                align-items: center;
+                justify-content: center;
+                display: flex;
+            }
+            .answers{
+                display: flex;
+                flex-direction: row;
+                gap: 5vw;
+                margin-top: 4.5vh;
+            }
+            
+            .correct{
+                width: 10vw;
+                height: 5vh;
+                background-color: #41ab5d;
+                border-radius: 10px;
+                justify-content: center;
+                display: flex;
+                align-items: center;
+                transition: all .5s ease;
+            }
+            .partial{
+                width: 10vw;
+                height: 5vh;
+                background-color: #ffef00;
+                border-radius: 10px;
+                justify-content: center;
+                align-items: center;
+                display: flex;
+                transition: all .5s ease;
+            }
+            .incorrect{
+                width: 10vw;
+                height: 5vh;
+                background-color: #ed2939;
+                border-radius: 10px;
+                justify-content: center;
+                align-items: center;
+                display: flex;
+                transition: all .5s ease;
+            }
+            .correct:hover, .partial:hover, .incorrect:hover{
+                cursor: pointer;
+                box-shadow: 3.5px 3.5px 10px rgba(0, 0, 0, 0.3);
+            }
+            .correct, .partial, .incorrect{
+                font-size: 20px;
+            }
+            /* Navigation layout controls */
+    .nav-controls { margin-top: 3vh; display: flex; gap: 20px; align-items: center; }
+    .nav-btn { padding: 10px 20px; font-size: 18px; border-radius: 8px; border: none; background: #333; color: white; cursor: pointer; }
+    .counter { font-size: 18px; font-weight: bold; }
+        </style>
+        <div class="container">
+            <div class="box">
+                <div class="question">
+                    <div class="title">Title Here:</div>
+                    <div class="author">Author Here:</div>
+                    <div class="text">Question Here:</div>
+                    <div class="answers">
+                        <div class="correct">Correct</div>
+                        <div class="partial">Partial</div>
+                        <div class="incorrect">Incorrect</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Navigation panel to shift between cards -->
+    <div class="nav-controls">
+      <button class="nav-btn" onclick="prevQuestion()">⬅️ Previous</button>
+      <div class="counter">Question <span id="currentNum">1</span> of <span id="totalNum">1</span></div>
+      <button class="nav-btn" onclick="nextQuestion()">Next ➡️</button>
+    </div>
+  </div>
+
+  <script>
+    let savedQuestions = [];
+    let currentIndex = 0;
+
+    // This runs automatically as soon as the page opens
+    window.onload = function() {
+      // 1. Fetch the data string back out of browser memory
+      const dataString = localStorage.getItem('obobQuestions');
+      
+      if (dataString) {
+        // 2. Turn the string data back into a usable JavaScript Array list
+        savedQuestions = JSON.parse(dataString);
+        displayCard(currentIndex);
+      } else {
+        document.getElementById('displayText').innerText = "No data found! Go back to setup.html and add questions.";
+      }
+    };
+
+    function displayCard(index) {
+      if (savedQuestions.length === 0) return;
+
+      const q = savedQuestions[index];
+      
+      // Update template content
+      document.getElementById('displayTitle').innerText = q.title + ":";
+      document.getElementById('displayAuthor').innerText = q.author + ":";
+      document.getElementById('displayText').innerText = q.text;
+
+      // Update footer status counters
+      document.getElementById('currentNum').innerText = index + 1;
+      document.getElementById('totalNum').innerText = savedQuestions.length;
+    }
+
+    function nextQuestion() {
+      if (currentIndex < savedQuestions.length - 1) {
+        currentIndex++;
+        displayCard(currentIndex);
+      }
+    }
+
+    function prevQuestion() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        displayCard(currentIndex);
+      }
+    }
+  </script>
+</body>
+</html>
+    </body>
+</html>

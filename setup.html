@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OBOB Quiz Creator</title>
+  <style>
+    body { font-family: sans-serif; padding: 40px; background-color: #f4f4f9; color: #333; }
+    .creator-box { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    h2 { margin-top: 0; }
+    input { width: 100%; padding: 10px; margin: 10px 0 20px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+    button { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold; margin-bottom: 10px; }
+    .btn-add { background-color: #41ab5d; color: white; }
+    .btn-play { background-color: #cbcadd; color: #333; }
+    .list-title { margin-top: 30px; font-weight: bold; }
+    ul { padding-left: 20px; }
+    li { margin-bottom: 5px; }
+  </style>
+</head>
+<body>
+
+  <div class="creator-box">
+    <h2>1. Create Your Questions</h2>
+    
+    <label>Book Title:</label>
+    <input type="text" id="setupTitle" placeholder="e.g., Harry Potter">
+
+    <label>Author:</label>
+    <input type="text" id="setupAuthor" placeholder="e.g., J.K. Rowling">
+
+    <label>Question:</label>
+    <input type="text" id="setupText" placeholder="e.g., What house is Harry in?">
+
+    <button class="btn-add" onclick="saveQuestion()">➕ Add Question to List</button>
+    <button class="btn-play" onclick="goToQuiz()">🎮 Open Quiz Template</button>
+
+    <div class="list-title">Questions Added So Far: (<span id="count">0</span>)</div>
+    <ul id="questionList"></ul>
+  </div>
+
+  <script>
+    // Initialize an empty array to store our questions
+    let questions = [];
+
+    function saveQuestion() {
+      const title = document.getElementById('setupTitle').value;
+      const author = document.getElementById('setupAuthor').value;
+      const text = document.getElementById('setupText').value;
+
+      // Don't save if fields are empty
+      if (!title || !author || !text) {
+        alert("Please fill out all fields!");
+        return;
+      }
+
+      // Create a question object
+      const newQuestion = { title: title, author: author, text: text };
+      
+      // Add it to our list
+      questions.push(newQuestion);
+
+      // Save the updated list into the browser's memory
+      localStorage.setItem('obobQuestions', JSON.stringify(questions));
+
+      // Reset the input fields for the next question
+      document.getElementById('setupTitle').value = '';
+      document.getElementById('setupAuthor').value = '';
+      document.getElementById('setupText').value = '';
+
+      updatePreviewList();
+    }
+
+    function updatePreviewList() {
+      document.getElementById('count').innerText = questions.length;
+      const ul = document.getElementById('questionList');
+      ul.innerHTML = ''; // Clear old preview list
+      
+      questions.forEach((q, index) => {
+        const li = document.createElement('li');
+        li.innerText = `Q${index + 1}: ${q.title} - "${q.text.substring(0, 20)}..."`;
+        ul.appendChild(li);
+      });
+    }
+
+    function goToQuiz() {
+      if (questions.length === 0) {
+        alert("Add at least one question first!");
+        return;
+      }
+      // Open the template page in a new window or tab
+      window.open('card.html', '_blank');
+    }
+    
+    // Clear old data when the setup page freshly loads
+    localStorage.removeItem('obobQuestions');
+  </script>
+</body>
+</html>
